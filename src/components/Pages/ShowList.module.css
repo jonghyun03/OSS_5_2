@@ -1,0 +1,159 @@
+.cursorPointer {
+  cursor: pointer;
+  color: #667eea;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  padding: 2px 4px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.cursorPointer:hover {
+  background: rgba(102, 126, 234, 0.1);
+  color: #5568d3;
+}
+
+.cursorPointer:hover::after {
+  content: " (클릭시 수정)";
+  color: #6c757d;
+  font-size: 0.9em;
+}
+
+.courseListContainer {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  padding: 0;
+  border: 1px solid #e0e0e0;
+}
+
+.tableHeader {
+  background: #667eea;
+  color: white;
+  padding: 16px 20px;
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 1fr 1.5fr 1.2fr;
+  gap: 20px;
+  font-weight: 600;
+  font-size: 1rem;
+  text-align: center;
+  align-items: center;
+}
+
+.courseRow {
+  padding: 16px 20px;
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 1fr 1.5fr 1.2fr;
+  gap: 20px;
+  align-items: center;
+  border-bottom: 1px solid #f0f0f0;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.courseRow:last-child {
+  border-bottom: none;
+}
+
+.courseRow:hover {
+  background: #f8f9fa;
+}
+
+.courseCell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.courseName {
+  font-weight: 600;
+  color: #333;
+}
+
+.courseMajor {
+  color: #555;
+  font-weight: 500;
+}
+
+.courseCredit {
+  color: #667eea;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.mandatoryBadge {
+  display: inline-block;
+  padding: 0;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.mandatoryBadge.required {
+  background: none;
+  color: #1e3a8a;
+  font-weight: 700;
+}
+
+.mandatoryBadge.optional {
+  background: none;
+  color: #6c757d;
+  font-weight: 400;
+}
+
+.deleteButton {
+  padding: 6px 16px;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+}
+
+.deleteButton:hover {
+  opacity: 0.9;
+}
+
+.emptyState {
+  padding: 60px 20px;
+  text-align: center;
+  color: #6c757d;
+  font-size: 1.1rem;
+}
+
+.emptyState::before {
+  content: "📚";
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 12px;
+}
+
+@media (max-width: 768px) {
+  .tableHeader,
+  .courseRow {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    text-align: left;
+  }
+  
+  .tableHeader {
+    display: none;
+  }
+  
+  .courseRow {
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    padding: 16px;
+  }
+  
+  .courseCell {
+    justify-content: space-between;
+  }
+  
+  .courseCell::before {
+    content: attr(data-label);
+    font-weight: 700;
+    color: #667eea;
+    margin-right: 12px;
+  }
+}
