@@ -1,10 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 function CourseModal({ show, onClose, onSave, title, course }) {
   const [name, setName] = useState('');
   const [major, setMajor] = useState('');
   const [credit, setCredit] = useState('');
   const [mandatory, setMandatory] = useState(true);
+
+  // useRef를 활용한 유효성 체크
+  const nameRef = useRef(null);
+  const majorRef = useRef(null);
+  const creditRef = useRef(null);
 
   useEffect(() => {
     if (course) {
@@ -39,22 +44,80 @@ function CourseModal({ show, onClose, onSave, title, course }) {
     setMajor('');
     setCredit('');
     setMandatory(true);
+    // ref 스타일 초기화
+    if (nameRef.current) {
+      nameRef.current.style.borderColor = '';
+      nameRef.current.removeAttribute('title');
+    }
+    if (majorRef.current) {
+      majorRef.current.style.borderColor = '';
+      majorRef.current.removeAttribute('title');
+    }
+    if (creditRef.current) {
+      creditRef.current.style.borderColor = '';
+      creditRef.current.removeAttribute('title');
+    }
+  };
+
+  const validateInputs = () => {
+    let isValid = true;
+
+    // 과목명 유효성 체크
+    if (!name.trim()) {
+      if (nameRef.current) {
+        nameRef.current.style.borderColor = 'red';
+        nameRef.current.setAttribute('title', '과목명을 입력해주세요.');
+      }
+      isValid = false;
+    } else {
+      if (nameRef.current) {
+        nameRef.current.style.borderColor = '';
+        nameRef.current.removeAttribute('title');
+      }
+    }
+
+    // 전공 유효성 체크
+    if (!major.trim()) {
+      if (majorRef.current) {
+        majorRef.current.style.borderColor = 'red';
+        majorRef.current.setAttribute('title', '전공을 입력해주세요.');
+      }
+      isValid = false;
+    } else {
+      if (majorRef.current) {
+        majorRef.current.style.borderColor = '';
+        majorRef.current.removeAttribute('title');
+      }
+    }
+
+    // 학점 유효성 체크
+    const creditNum = parseInt(credit);
+    if (!credit.trim() || isNaN(creditNum) || creditNum < 1 || creditNum > 5) {
+      if (creditRef.current) {
+        creditRef.current.style.borderColor = 'red';
+        creditRef.current.setAttribute('title', '학점은 1~5 사이의 숫자를 입력해주세요.');
+      }
+      isValid = false;
+    } else {
+      if (creditRef.current) {
+        creditRef.current.style.borderColor = '';
+        creditRef.current.removeAttribute('title');
+      }
+    }
+
+    return isValid;
   };
 
   const handleSave = () => {
-    const trimmedName = name.trim();
-    const trimmedMajor = major.trim();
-    const trimmedCredit = credit.trim();
-
-    if (!trimmedName || !trimmedMajor || !trimmedCredit) {
-      alert(`비어있는 항목이 있어 ${course ? '강의 수정' : '강의 추가'}이 불가능합니다!`);
+    if (!validateInputs()) {
+      alert(`입력한 정보를 확인해주세요!`);
       return;
     }
 
     const courseData = {
-      name: trimmedName,
-      major: trimmedMajor,
-      credit: parseInt(trimmedCredit),
+      name: name.trim(),
+      major: major.trim(),
+      credit: parseInt(credit),
       mandatory: mandatory,
     };
 
@@ -104,22 +167,27 @@ function CourseModal({ show, onClose, onSave, title, course }) {
             <div className="modal-body">
               <div className="inputs">
                 <input
+                  ref={nameRef}
                   type="text"
                   className="form-control"
                   placeholder="과목명"
                   aria-label="과목명"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
+                  onBlur={validateInputs}
                 />
                 <input
+                  ref={majorRef}
                   type="text"
                   className="form-control"
                   placeholder="전공"
                   aria-label="전공"
                   value={major}
                   onChange={(e) => setMajor(e.target.value)}
+                  onBlur={validateInputs}
                 />
                 <input
+                  ref={creditRef}
                   type="number"
                   className="form-control"
                   placeholder="학점"
@@ -129,6 +197,7 @@ function CourseModal({ show, onClose, onSave, title, course }) {
                   step="1"
                   value={credit}
                   onChange={(e) => setCredit(e.target.value)}
+                  onBlur={validateInputs}
                 />
                 <div style={{ display: 'flex', gap: '30px' }}>
                   <div>
